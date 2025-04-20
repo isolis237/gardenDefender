@@ -1,0 +1,18 @@
+services:
+  api:
+    build: .
+    shm_size: '8gb'
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    ports:
+      - "8000:5000"
+    volumes:
+      - .:/app
+      - model-cache:/root/.cache
+    runtime: nvidia
+    command: bash -c "echo 'To enter container: docker exec -it api bash' && tail -f /dev/null"
+volumes:
+  model-cache:

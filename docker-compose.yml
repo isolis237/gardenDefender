@@ -13,6 +13,6 @@ services:
       - .:/app
       - model-cache:/root/.cache
     runtime: nvidia
-    command: bash -c "echo 'To enter container: docker exec -it api bash' && tail -f /dev/null"
+    command: bash -c "echo 'To enter container run docker exec -it api bash' && tail -f /dev/null"
 volumes:
   model-cache:

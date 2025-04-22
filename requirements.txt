@@ -1,18 +1,13 @@
-# --- core ---
+# --- Core dependencies ---
 ultralytics==8.3.109
-#torch==2.2.1+cpu       
-#torchvision==0.17.1+cpu   
-
-# --- export helpers ---
-onnx==1.15.0
-onnxruntime==1.17.3
-protobuf>=4.25
-ncnn==1.0.20241226     # wheels for Win‑x64, Linux‑x64, arm64
-
-# --- runtime only ---
 fastapi==0.110.0
 uvicorn[standard]==0.29.0
 opencv-python-headless==4.9.0.80
 numpy<2.0
-
 python-multipart
+
+# --- Export and inference helpers ---
+onnx==1.15.0
+onnxruntime==1.17.3
+protobuf>=4.25
+ncnn==1.0.20241226

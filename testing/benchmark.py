@@ -7,13 +7,13 @@ from ultralytics import YOLO
 
 # ─── CONFIG ────────────────────────────────────────────────────────────────────
 MODEL_PATHS = {
-    "yolo11n": "models/yolo11n.pt",
-    "yolo11s": "models/yolo11s.pt",
-    "yolo11m": "models/yolo11m.pt",
-    "best":    "models/small_best.pt",
+    "a": "models/yolo11s.pt",
+    "b": "models/yolo11m.pt",
+    "c": "models/base_small.pt",
+    "d": "models/aug_small.pt"
 }
 SRC_DIR = "./testing/test_images"
-DST_DIR = "./testing/benchmark_output"
+DST_DIR = "./testing/benchmark_output_aug"
 ALLOWED_EXTS = (".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff")
 # ────────────────────────────────────────────────────────────────────────────────
 

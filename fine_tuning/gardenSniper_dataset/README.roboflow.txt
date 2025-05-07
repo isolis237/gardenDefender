@@ -1,8 +1,8 @@
 
-small_animal - v1 2025-04-18 6:10pm
+small_animal - v9 2025-04-25 1:56pm
 ==============================
 
-This dataset was exported via roboflow.com on April 18, 2025 at 11:11 PM GMT
+This dataset was exported via roboflow.com on April 25, 2025 at 6:57 PM GMT
 
 Roboflow is an end-to-end computer vision platform that helps you
 * collaborate with your team on computer vision projects
@@ -17,12 +17,12 @@ visit https://github.com/roboflow/notebooks
 
 To find over 100k other datasets and pre-trained models, visit https://universe.roboflow.com
 
-The dataset includes 999 images.
+The dataset includes 1639 images.
 Small_animal are annotated in YOLOv11 format.
 
 The following pre-processing was applied to each image:
 * Auto-orientation of pixel data (with EXIF-orientation stripping)
-* Resize to 480x480 (Stretch)
+* Resize to 640x640 (Stretch)
 
 No image augmentation techniques were applied.
 

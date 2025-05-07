@@ -5,6 +5,7 @@ uvicorn[standard]==0.29.0
 opencv-python-headless==4.9.0.80
 numpy<2.0
 python-multipart
+paho-mqtt==2.0.0  # <-- Added MQTT client library
 
 # --- Export and inference helpers ---
 onnx==1.15.0

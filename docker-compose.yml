@@ -10,28 +10,17 @@ services:
           devices:
             - capabilities: [gpu]
     ports:
-      - "5000:5000"  # exposes FastAPI on localhost:8000
+      - "5000:5000"
+      - "8000:8000"
+      - "8765:8765"
     volumes:
       - .:/app
       - model-cache:/root/.cache
     runtime: nvidia
-    environment:
-      MQTT_BROKER: mosquitto  # <-- use container name as hostname
-    depends_on:
-      - mosquitto
-    command: bash -c "echo 'To enter container run docker exec -it api bash' && tail -f /dev/null"
-
-
-  mosquitto:
-    image: eclipse-mosquitto:2
-    restart: unless-stopped
-    ports:
-      - "1883:1883"  # expose MQTT to host (optional if only internal)
-    volumes:
-      - mosquitto_data:/mosquitto/data
-      - mosquitto_config:/mosquitto/config
+    command: >-
+      uvicorn app.server.server:app
+      --host 0.0.0.0 --port 8000
+    #command: bash -c "echo 'To enter container run docker exec -it api bash' && tail -f /dev/null"
 
 volumes:
   model-cache:
-  mosquitto_data:
-  mosquitto_config:

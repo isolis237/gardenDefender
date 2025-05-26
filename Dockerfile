@@ -17,10 +17,11 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 # ---------- runtime layer ----------
 FROM python:3.10-slim-bookworm
 
-# Install system libraries for OpenCV
+# Install system libraries for OpenCV GUI support (Qt + X11)
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        libgl1 libglib2.0-0 && \
+        libgl1 libglib2.0-0 libsm6 libxext6 libxrender1 \
+        libxcb-xinerama0 libxcb1 libx11-6 libx11-xcb1 && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -33,5 +34,4 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 COPY app/    ./app
 COPY models/ ./models
 
-# Default to shell (for debugging/flexibility)
 CMD ["bash"]

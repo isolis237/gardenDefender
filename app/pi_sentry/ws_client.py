@@ -1,7 +1,7 @@
 import asyncio, cv2, json, websockets, numpy as np
 from app.server.config import WS_URI, WS_TIMEOUT, DETECTION_CONF
 
-JPEG_PARAMS = [int(cv2.IMWRITE_JPEG_QUALITY), 90]
+JPEG_PARAMS = [int(cv2.IMWRITE_JPEG_QUALITY), 85]
 
 class WSClient:
     def __init__(self):
@@ -12,6 +12,7 @@ class WSClient:
 
     async def send_frame(self, frame: np.ndarray):
         ok, jpeg = cv2.imencode(".jpg", frame, JPEG_PARAMS)
+
         if not ok:
             return None
         await self.ws.send(jpeg.tobytes())

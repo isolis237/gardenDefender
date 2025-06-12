@@ -21,6 +21,7 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"],
 
 # ───────── Global frame store ─────────
 latest_frame: np.ndarray | None = None
+frame_count = 0
 w, h = CAMERA_RESOLUTION
 
 # ───────── Tracker ─────────
@@ -56,30 +57,54 @@ model   = YOLO(MODEL_PATH)
 tracker = KFTracker()
 
 def process(jpeg: bytes):
-    global latest_frame
-    frame = cv2.imdecode(np.frombuffer(jpeg,np.uint8), cv2.IMREAD_COLOR)
-    if frame is None: return {"found": False}
-    meas=None
-    bbox_xyxy=None
-    for r in model.predict(frame, conf=DETECTION_CONF, verbose=False):
-        for box in r.boxes:
-            if r.names[int(box.cls)]=="small_animal":
-                x1,y1,x2,y2=box.xyxy[0].cpu().numpy()
-                bbox_xyxy = (int(x1), int(y1), int(x2), int(y2))
-                meas=((x1+x2)/2,(y1+y2)/2); break
-        if meas: break
-    pos=tracker.update(meas)
-    if bbox_xyxy:                                       # draw YOLO box (red)
+    global latest_frame, frame_count
+    frame_count += 1
+
+    frame = cv2.imdecode(np.frombuffer(jpeg, np.uint8), cv2.IMREAD_COLOR)
+    if frame is None:
+        return {"found": False}
+
+    meas = None
+    bbox_xyxy = None
+
+    # ── Run inference only every 5th frame ──
+    if frame_count % 3 == 0:
+        for r in model.predict(frame, conf=DETECTION_CONF, verbose=False):
+            for box in r.boxes:
+                if r.names[int(box.cls)] == "small_animal":
+                    x1, y1, x2, y2 = box.xyxy[0].cpu().numpy()
+                    bbox_xyxy = (int(x1), int(y1), int(x2), int(y2))
+                    meas = ((x1 + x2) / 2, (y1 + y2) / 2)
+                    break
+            if meas:
+                break
+
+    # ── Kalman update/predict ──
+    pos = tracker.update(meas)
+
+    # ── Draw bounding box (YOLO) ──
+    if bbox_xyxy:
         cv2.rectangle(frame, bbox_xyxy[:2], bbox_xyxy[2:], (0, 0, 255), 2)
-    if pos is not None:                                 # draw KF dot (green)
+
+    # ── Draw Kalman dot ──
+    if pos is not None:
         cv2.circle(frame, (int(pos[0]), int(pos[1])), 4, (0, 255, 0), -1)
+
     latest_frame = frame
-    latest_frame=frame
-    if pos is None: return {"found": False}
-    centred=abs(pos[0]-w/2)<CENTER_TOLERANCE_PX and \
-            abs(pos[1]-h/2)<CENTER_TOLERANCE_PX
-    return {"found":meas is not None,"x":float(pos[0]),"y":float(pos[1]),
-            "centred":bool(centred)}
+
+    if pos is None:
+        return {"found": False}
+
+    centred = abs(pos[0] - w / 2) < CENTER_TOLERANCE_PX and \
+              abs(pos[1] - h / 2) < CENTER_TOLERANCE_PX
+
+    return {
+        "found":   meas is not None,
+        "x":       float(pos[0]),
+        "y":       float(pos[1]),
+        "centred": bool(centred)
+    }
+
 
 # ───────── WebSocket server lifecycle ─────────
 async def ws_handler(ws):

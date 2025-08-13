@@ -38,3 +38,8 @@ get into container and run whatever with `python ./<file_name>`
 > Note: working directory is project root so either specify file path or cd into each specific directory
 
 
+TODO:
+
+Improve Kalman tracker
+- best to create accurate PID and mapping between image point of interest and system inverse kinematics to get there
+- then connect back to kalman tracker and tune

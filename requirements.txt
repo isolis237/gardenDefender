@@ -1,0 +1,14 @@
+# --- Core dependencies ---
+ultralytics==8.3.109
+fastapi==0.110.0
+uvicorn[standard]==0.29.0
+opencv-python
+numpy<2.0
+python-multipart
+filterpy
+
+# --- Export and inference helpers ---
+onnx==1.15.0
+onnxruntime==1.17.3
+protobuf>=4.25
+ncnn==1.0.20241226

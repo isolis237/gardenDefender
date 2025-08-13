@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  api:
+    build: .
+    shm_size: '8gb'
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    ports:
+      - "5000:5000"
+      - "8000:8000"
+      - "8765:8765"
+    volumes:
+      - .:/app
+      - model-cache:/root/.cache
+    runtime: nvidia
+    command: >-
+      uvicorn app.server.server:app
+      --host 0.0.0.0 --port 8000
+    #command: bash -c "echo 'To enter container run docker exec -it api bash' && tail -f /dev/null"
+
+volumes:
+  model-cache:
